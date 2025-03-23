@@ -20,6 +20,30 @@ The data manipulation I did within the data first is to update the column names.
 
 ### Boxplot
 
+![This is a visualization representing the counts of the hottest months for every city in the U.S.](Boxplot_Urban_Rural_2000.png)
+
+https://colab.research.google.com/drive/1LbZRlMsTFqnWyQtoJ2Sj3NL65ZNSurxH?authuser=0#scrollTo=crsO2iicLJ9P
+
+```
+urban_melted = urban[['Urban Population, 2000 (1,000)', 'Rural Population, 2000 (1,000)']].melt(var_name='Geographical Areas', value_name='Population (1,000)')
+
+# Plot the boxplots using Seaborn
+sns.boxplot(x='Geographical Areas', y='Population (1,000)', data=urban_melted)
+plt.title('Boxplots of Urban and Rural Population')
+plt.xlabel('Geographical Areas')
+plt.ylabel('Population in Thousands')
+```
+
+The above chart was created in Google Colab using seaborn and matplotlib.  I first used the python melt function inorder to change from wide to long format.  The above code creates boxplots using seaborn in order to show the distribution of both Urban and Rural Populations within the 2000s.
+
+The above chart shows two boxplot glyphs one showing Urban Population distribution and the other showing Rural Population distribution.  The data consists of population counts for the year 2000.  It also uses counts in the thousands (meaning each point should be multiplied by 1000 to get the actual count).
+
+The advantage of using a boxplot for this distribution is due to the
+
+### Histogram
+
+
+
 ## References
 
 *Every report must list the references (including the URL) that you consulted while completing the assignment. Replace the items below with the references you consulted*
