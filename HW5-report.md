@@ -104,6 +104,23 @@ An observation that I noticed is the outliers within the Urban Population Distri
 
 ![This is a visualization represents the population density vs land area in order to see whether larger land area compared to population means more rural percentage.](BubbleChartPopDensvsState.png)
 
+https://colab.research.google.com/drive/1LbZRlMsTFqnWyQtoJ2Sj3NL65ZNSurxH?authuser=0#scrollTo=ICmG0IXkoe8z
+
+```
+land = pd.read_excel("LandArea.xlsx")
+land = land[['Table with row headers in column A and column headers in rows 4 to 7.', 'Unnamed: 5']]
+land.columns = ['State', 'Land Area (square miles)']
+land = land.iloc[8:59]
+land['State'] = land['State'].str.lstrip()
+land['State'] = land['State'].str.rstrip()
+land = land.drop(land[land['State'] == 'District of Columbia'].index)
+
+# Merging on 'State' column (inner join by default)
+land_urban = land.merge(urban, on='State')
+land_urban.info()
+land_urban
+```
+
 ```
 # Calculate Population Density (Population per square mile)
 land_urban['Population Density'] = land_urban['Total Population 2000 (1,000)'] / land_urban['Land Area (square miles)']
