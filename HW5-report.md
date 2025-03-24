@@ -102,7 +102,41 @@ An observation that I noticed is the outliers within the Urban Population Distri
 
 ## Part 2
 
+![This is a visualization represents the population density vs land area in order to see whether larger land area compared to population means more rural percentage.](BubbleChartPopDensvsState.png)
 
+```
+# Calculate Population Density (Population per square mile)
+land_urban['Population Density'] = land_urban['Total Population 2000 (1,000)'] / land_urban['Land Area (square miles)']
+
+# Sort states by population density
+land_urban = land_urban.sort_values(by='Population Density', ascending=False)
+
+# Ensure the 'Rural Population, 2000 (1,000)' column is numeric
+land_urban['Rural Population, 2000 (1,000)'] = pd.to_numeric(land_urban['Rural Population, 2000 (1,000)'], errors='coerce')
+land_urban['Total Population 2000 (1,000)'] = pd.to_numeric(land_urban['Total Population 2000 (1,000)'], errors='coerce')
+
+# Handle any zero values in 'Total Population 2000 (1,000)' to avoid division by zero
+land_urban['Total Population 2000 (1,000)'] = land_urban['Total Population 2000 (1,000)'].replace(0, 1)  # Replace zeros with 1 for safety
+
+# Calculate the bubble size based on the ratio of Rural Population to Total Population
+sizes = (land_urban['Rural Population, 2000 (1,000)'] / land_urban['Total Population 2000 (1,000)']) * 1000  # Scale to make the bubbles reasonable
+
+# Create Bar Plot
+plt.figure(figsize=(20, 10))
+sns.scatterplot(x=land_urban['State'], y=land_urban['Population Density'], s=sizes)
+
+# Labels and Title
+plt.xlabel("State")
+plt.ylabel("Population Density (Total Population / Land Area)")
+plt.title("Population Density by State encoded by percentage of Rural Population via Size")
+plt.xticks(rotation=45)  # Rotate state names for better readability
+
+plt.show()
+```
+
+I used another dataset that has the land area of each state.  I wanted to know whether States with a higher rural population tend to have a higher land mass compared to population?  I first removed any unessecary data from that other dataset except for land area and state.  I then removed any trailing or lagging spaces and finally merged the two dataframes together.  I then used y as the Total Population / Land Area and used x as the State Name.  I then encoded using Size in order to show larger rural population percentage means larger total Population per land area.
+
+In the visualization it is clear that the graph is an inverse graph that shows that the less Total Population per Land area signifies more rural percentage.  It also shows that states themselves have an inverse distribution where the Total Population per Land Area decreases in an inverse style.  This would be an interesting thing to further find out more information on why that is the case.
 
 ## References
 
@@ -111,3 +145,4 @@ An observation that I noticed is the outliers within the Urban Population Distri
 * Reference 1, <https://www.digitalocean.com/community/tutorials/pandas-melt-unmelt-pivot-function>
 * Reference 2, <https://www.census.gov/library/publications/2010/compendia/statab/130ed/population.html>
 * Reference 3, <https://en.wikipedia.org/wiki/Sturges%27s_rule>
+* Reference 4, <https://www.census.gov/library/publications/2010/compendia/statab/130ed/geography-environment.html>
