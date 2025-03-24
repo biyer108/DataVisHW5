@@ -10,10 +10,13 @@ Dataset 3 (Urban and Rural Population by State)
 ### Data Manipulation
 
 ```
+#Data Manipulation
 new_col_names = ['State', 'State Abbreviation', 'Former Urban definition 1990 (percent)', 'Urban definition 1990 (percent)', 'Total Population 2000 (1,000)', 'Urban Population, 2000 (1,000)', 'Urban Population, 2000 percent', 'Rural Population, 2000 (1,000)']
 urban.columns = new_col_names
 urban = urban.iloc[6:57]
 urban = urban.drop(urban[urban['State'] == 'District of Columbia'].index)
+urban.info()
+urban.head(10)
 ```
 
 The data manipulation I did within the data first is to update the column names.  I first updated the column names to what seemed logical and concise names.  I then updated the urban rows to not include any null rows and as well as remove the United States, total from the dataframe.  Finally, I dropped the District of Columbia from the dataframe to only have the bare 50 states datapoints.
@@ -25,6 +28,7 @@ The data manipulation I did within the data first is to update the column names.
 https://colab.research.google.com/drive/1LbZRlMsTFqnWyQtoJ2Sj3NL65ZNSurxH?authuser=0#scrollTo=crsO2iicLJ9P
 
 ```
+#Boxplot
 urban_melted = urban[['Urban Population, 2000 (1,000)', 'Rural Population, 2000 (1,000)']].melt(var_name='Geographical Areas', value_name='Population (1,000)')
 
 # Plot the boxplots using Seaborn
@@ -52,7 +56,7 @@ https://colab.research.google.com/drive/1LbZRlMsTFqnWyQtoJ2Sj3NL65ZNSurxH?authus
 
 ```
 #Histogram
-sns.histplot(urban['Urban Population, 2000 (1,000)'], bins=15, kde=True)
+sns.histplot(urban['Urban Population, 2000 (1,000)'], bins=8, kde=True)
 plt.title('Distribution of Urban Population')
 plt.xlabel('Urban Population')
 plt.ylabel('Frequency')
@@ -61,7 +65,13 @@ plt.show()
 
 The above chart was created in Google Colab using seaborn and matplotlib.  The above code creates a histogram using seaborn in order to show the distribution of Urban Population within the 2000s.  I then updated the x and y labels to be Urban Population and Frequency respectively.  I added a title to explain what is being shown which is "Distribution of Urban and Population".
 
-The above chart shows a histogram of Urban Population distribution.  The data consists of population counts for the year 2000.  It also uses counts in the thousands (meaning each point should be multiplied by 1000 to get the actual count).  The number of bins within the code, I chose was 8.  This was because of how 8 bins seemed to accurately show 
+The above chart shows a histogram of Urban Population distribution.  The data consists of population counts for the year 2000.  It also uses counts in the thousands (meaning each point should be multiplied by 1000 to get the actual count).  The number of bins within the code, I chose was 8.  This was because of how 8 bins seemed to show the general distribution of the data without it becoming too noisy. Using Sturges Rule (Bins=⌈log2(50)+1⌉=⌈6.64+1⌉=8) I found that 8 bins would be the best number.  I used Sturges Rule, because of how it is best for smaller datasets.  I also added a kernel density estimation to estimate a probability density function.  This would make it clear the distribution of the data.
+
+The advantage of using a histogram is that it shows shape of the distribution unlike a boxplot.  The data for Urban populations shows how it is skewed for one side being 0 to 4,900 (4,900,000) having a count of 35 and the larger the Urban population after that the less the count.  This supports what is shown in the boxplot.  Finally it shows trends in the Urban population where the larger the urban population from 4,900,000 the less count it is.
+
+The disadvantage of the histogram with this data is that it is reliant on what a person chooses for their bin size.  If they choose a larger bin size like 20, then the histogram would be noisy on how the distribution would look.  If the bin size is too small then the histogram would look to simple.  Histograms don't show the exact values so if the user chooses a bad bin size, then the counts would obviously be skewed.  For this data, if I increased the bin size then the count specifically for the 0 to 4,900 could be less which might indicate a different distribution.  For histograms it is harder to find outliers.
+
+What I noticed from the histogram is that the data seems to be right-skewed.  The data seems to indicate that Urban populations are more to 0-4,900,000 population count and everything larger than that population count the less the number of states that have that.
 
 ### eCDF Chart
 
@@ -70,6 +80,7 @@ The above chart shows a histogram of Urban Population distribution.  The data co
 https://colab.research.google.com/drive/1LbZRlMsTFqnWyQtoJ2Sj3NL65ZNSurxH?authuser=0#scrollTo=crsO2iicLJ9P
 
 ```
+#eCDF Plot
 sns.ecdfplot(urban['Urban Population, 2000 (1,000)'])
 sns.ecdfplot(urban['Rural Population, 2000 (1,000)'])
 plt.title('Empirical Cumulative Distribution Functions of Urban and Rural Population')
@@ -79,7 +90,19 @@ plt.legend(['Urban Population', 'Rural Population'])
 plt.show()
 ```
 
+The above chart was created in Google Colab using seaborn and matplotlib.  The above code creates an eCDF chart using seaborn in order to show the distribution of Urban and Rural Population within the 2000s.  I then updated the x and y labels to be Population and Cumulative Probability respectively.  I added a title to explain what is being shown which is "Empirical Cumulative Distribution Functions of Urban and Rural Population".
+
+The above chart shows the Empirical Cumulative Distribution for both the Urban Population count and the Rural Population count for the year 2000.  The encoding is using hue to differentiate Urban Population and Rural Population within the 2000s.
+
+The advantage of using eCDF chart is that each datapoint is displayed.  Each states, data is easily shown in the visualization.  Also it is easy to spot outliers.  In this case it is easy to see an outlier in the Urban population data where the outlier is clearly above 30,000 (in thousands) is way farther from the rest of the data.  It is also easy to compare the Rural and the Urban population distributions.
+
+The disadvantage of using eCDF chart is that it is hard to find exact population percentages and summary statistics of the Urban and Rural Populations.
+
+An observation that I noticed is the outliers within the Urban Population Distribution (30,000 in thousands population compared to the other state's urban population).
+
 ## Part 2
+
+
 
 ## References
 
@@ -87,3 +110,4 @@ plt.show()
 
 * Reference 1, <https://www.digitalocean.com/community/tutorials/pandas-melt-unmelt-pivot-function>
 * Reference 2, <https://www.census.gov/library/publications/2010/compendia/statab/130ed/population.html>
+* Reference 3, <https://en.wikipedia.org/wiki/Sturges%27s_rule>
